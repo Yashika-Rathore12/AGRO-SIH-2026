@@ -1,0 +1,9 @@
+{
+  "name": "AgroConnect AI",
+  "short_name": "AgroConnect",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f3f5ef",
+  "theme_color": "#183b2a",
+  "description": "AI-enabled farm advisory and market linkage platform."
+}

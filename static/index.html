@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#183b2a">
+  <title>AgroConnect AI</title>
+  <link rel="manifest" href="/static/manifest.json">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<div class="app-shell">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">A</div>
+      <div>
+        <h1>AgroConnect <span>AI</span></h1>
+        <p>Farm intelligence → better harvest → better market</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <span id="networkBadge" class="badge online">● Online</span>
+      <select id="language" aria-label="Language">
+        <option value="en">English</option>
+        <option value="hi">हिन्दी</option>
+      </select>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <p class="eyebrow">SMART AGRICULTURE • SIH 2026</p>
+        <h2 id="heroTitle">One simple dashboard for the whole farm journey.</h2>
+        <p id="heroText">Monitor field conditions, screen crop stress, plan irrigation, forecast harvest and find stronger buyer options.</p>
+      </div>
+      <div class="hero-chip">Offline-first PWA</div>
+    </section>
+
+    <section class="metric-grid">
+      <article class="metric"><span>Crop</span><strong id="mCrop">—</strong><small id="mArea">—</small></article>
+      <article class="metric"><span>Soil moisture</span><strong id="mMoisture">—</strong><small>live telemetry</small></article>
+      <article class="metric"><span>Temperature</span><strong id="mTemp">—</strong><small>microclimate</small></article>
+      <article class="metric"><span>Best mandi</span><strong id="mMandi">—</strong><small id="mPrice">—</small></article>
+    </section>
+
+    <div class="section-title"><div><p class="eyebrow">FARM INTELLIGENCE</p><h3>Today’s control room</h3></div><button class="ghost" onclick="loadDashboard()">↻ Refresh</button></div>
+
+    <section class="grid two">
+      <article class="card">
+        <div class="card-head"><div><h3>Soil & microclimate</h3><p>Latest sensor snapshot</p></div><span class="status-dot">LIVE</span></div>
+        <div class="telemetry">
+          <div><span>Moisture</span><b id="tMoisture">—</b></div>
+          <div><span>Nitrogen</span><b id="tN">—</b></div>
+          <div><span>Phosphorus</span><b id="tP">—</b></div>
+          <div><span>Potassium</span><b id="tK">—</b></div>
+          <div><span>Temperature</span><b id="tTemp">—</b></div>
+          <div><span>Humidity</span><b id="tHumidity">—</b></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><div><h3>Quick advisory</h3><p>Explainable rules from farm telemetry</p></div></div>
+        <button class="primary wide" onclick="getAdvisory()">Generate farm advisory</button>
+        <div id="advisoryBox" class="result muted">No new advisory yet.</div>
+      </article>
+    </section>
+
+    <section class="grid two">
+      <article class="card">
+        <div class="card-head"><div><h3>Leaf health AI</h3><p>Upload a clear leaf photo</p></div><span class="pill">MULTI-MODAL</span></div>
+        <input id="leafImage" type="file" accept="image/jpeg,image/png,image/webp">
+        <div id="previewWrap" class="preview-wrap hidden"><img id="preview" alt="Leaf preview"></div>
+        <button class="primary wide" onclick="scanLeaf()">Run AI screening</button>
+        <div id="diseaseResult" class="result muted">Upload an image to begin.</div>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><div><h3>Mandi intelligence</h3><p>Regional price snapshot</p></div><span class="pill">MARKET</span></div>
+        <div id="marketTable" class="table-wrap">Loading…</div>
+      </article>
+    </section>
+
+    <section class="grid two">
+      <article class="card">
+        <div class="card-head"><div><h3>Harvest forecast</h3><p>Expected quantity + harvest window</p></div><span class="pill">FORECAST</span></div>
+        <div class="form-row">
+          <label>Crop<select id="forecastCrop"><option>Wheat</option><option>Rice</option><option>Soybean</option><option>Cotton</option><option>Maize</option><option>Tomato</option></select></label>
+          <label>Area (acres)<input id="forecastArea" type="number" value="2.5" min="0.1" step="0.1"></label>
+        </div>
+        <button class="primary wide" onclick="runForecast()">Forecast harvest</button>
+        <div id="forecastResult" class="result muted">Ready.</div>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><div><h3>Buyer & logistics match</h3><p>Connect harvest quantity to nearby demand</p></div><span class="pill">LINKAGE</span></div>
+        <div class="form-row">
+          <label>Crop<select id="buyerCrop"><option>Wheat</option><option>Rice</option><option>Soybean</option><option>Maize</option></select></label>
+          <label>Quantity (t)<input id="buyerQty" type="number" value="4" min="0.1" step="0.1"></label>
+        </div>
+        <button class="primary wide" onclick="matchBuyers()">Find best buyers</button>
+        <div id="buyerResult" class="result muted">Ready.</div>
+      </article>
+    </section>
+
+    <section class="card telemetry-form">
+      <div class="card-head"><div><h3>Mobile telemetry simulator</h3><p>Demonstrates sensor ingestion and offline queueing</p></div><span id="queueBadge" class="pill">0 queued</span></div>
+      <div class="form-row six">
+        <label>Moisture<input id="sMoisture" type="number" value="42"></label>
+        <label>Temp<input id="sTemp" type="number" value="27"></label>
+        <label>Humidity<input id="sHumidity" type="number" value="64"></label>
+        <label>N<input id="sN" type="number" value="48"></label>
+        <label>P<input id="sP" type="number" value="23"></label>
+        <label>K<input id="sK" type="number" value="36"></label>
+      </div>
+      <button class="secondary" onclick="sendTelemetry()">Send telemetry</button>
+      <button class="ghost" onclick="syncQueue()">Sync offline queue</button>
+      <p class="footnote">If the browser goes offline, telemetry is stored locally and can be synchronized when connectivity returns.</p>
+    </section>
+  </main>
+
+  <footer>AgroConnect AI • SIH 2026 prototype • Built with FastAPI + SQLite + HTML/CSS/JavaScript</footer>
+</div>
+<script src="/static/app.js"></script>
+</body>
+</html>
